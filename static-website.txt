@@ -1,0 +1,11 @@
+# Build
+docker build -t gisjedi/static-website static-website
+
+# Run locally
+docker run --rm -it -p 80:80 gisjedi/static-website
+
+# Push and launch into cluster
+docker push gisjedi/static-website
+dcos marathon app add static-website/marathon.json
+
+# Add health check

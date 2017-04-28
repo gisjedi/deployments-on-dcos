@@ -1,0 +1,17 @@
+# Deploy eremetic via CLI
+dcos marathon app add eremetic/marathon.json
+
+# Example without auth
+curl -k -L https://m1.dcos/service/eremetic/task --data '{"docker_image":"busybox","command":"date","task_cpus":1,"task_mem":100,"callback_uri":""}'
+
+# Example with auth and task ID captured in ENV
+export TASKID=$(curl -k -L --header "Authorization: token=$(dcos config show core.dcos_acs_token)" \
+    https://m1.dcos/service/eremetic/task --data '{"docker_image":"busybox","command":"date","task_cpus":1,"task_mem":100,"callback_uri":""}') ; echo $TASKID
+
+# Example showing task status from the request submitted above
+curl -k -L --header "Authorization: token=$(dcos config show core.dcos_acs_token)" \
+    https://m1.dcos/service/eremetic/task/$(echo $TASKID | cut -d'"' -f 2)
+
+# Use Minuteman for internal service access
+export TASKID=$(curl -L http://eremetic.marathon.l4lb.thisdcos.directory:8000/task --data '{"docker_image":"busybox","command":"date","task_cpus":1,"task_mem":100,"callback_uri":""}') ; echo $TASKID
+curl -L http://eremetic.marathon.l4lb.thisdcos.directory:8000/task/$(echo $TASKID | cut -d'"' -f 2)
