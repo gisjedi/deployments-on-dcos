@@ -8,4 +8,6 @@ docker run --rm -it -p 80:80 gisjedi/static-website
 docker push gisjedi/static-website
 dcos marathon app add static-website/marathon.json
 
-# Add health check
+# Add health check, demonstrate waiting state and conflict
+# How do we avoid this? Let Marathon assign the ports and using VIPs or Labels
+# for discovery
